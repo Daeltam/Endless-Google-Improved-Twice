@@ -126,7 +126,8 @@ function requestNextPage() {
 function onScrollDocumentEnd() {
     let y = window.scrollY;
     let delta = y - prevScrollY;
-    if (!nextPageLoading && delta > 0 && isDocumentEnd(y)) {
+    let elem = document.querySelector('tr[jsname="TeSSVd"]').childNodes.length
+    if (!nextPageLoading && delta > 0 && isDocumentEnd(y) && elem > 0) {
         requestNextPage();
     }
     prevScrollY = y;
