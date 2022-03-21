@@ -4,6 +4,7 @@ My aim is just to add some styling and modifaction for better aesthetics. These 
 1. Removes the page navigation buttons at the bottom.
 2. Removes the repeating "Related searches" when the next page loads.
 3. Move the location bar from bottom to the topbar.
+4. Stop the infinite scrolling when there are no more results to load.
 
 To use this script, you need to install a userscript manager extension for your browser. Just choose according to your liking below:
 
