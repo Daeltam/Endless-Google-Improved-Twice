@@ -10,7 +10,7 @@
 // @include         https://www.google.*
 // @include         https://encrypted.google.*
 // @run-at          document-end
-// @version         0.0.7-LoonerNinja
+// @version         0.0.8-MasterScavenger
 // @license         MIT
 // @require         https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @grant           GM_addStyle
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 
-// This is LoonerNinja's tiny fork of tumpio's original which:
+// This is MasterScavenger's tiny fork of tumpio's original which:
 // 1. Removes the page navigation buttons at the bottom.
 // 2. Removes the repeating "Related searches" when the next page loads.
 // 3. Move the location bar from bottom to the topbar.
