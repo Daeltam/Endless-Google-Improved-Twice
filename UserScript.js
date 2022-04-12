@@ -6,11 +6,12 @@
 // @homepageURL     https://openuserjs.org/scripts/tumpio/Endless_Google
 // @supportURL      https://github.com/tumpio/gmscripts/issues
 // @icon            https://github.com/tumpio/gmscripts/raw/master/Endless_Google/large.png
-// @include         http://www.google.*
-// @include         https://www.google.*
-// @include         https://encrypted.google.*
+// @match           *://www.google.com/*
+// @match           *://encrypted.google.com/*
 // @run-at          document-end
-// @version         0.0.8-MasterScavenger
+// @version         0.0.9-MasterScavenger
+// @updateURL       https://raw.githubusercontent.com/MasterScavenger/Endless-Google-Improved/main/UserScript.js
+// @downloadURL     https://raw.githubusercontent.com/MasterScavenger/Endless-Google-Improved/main/UserScript.js
 // @license         MIT
 // @require         https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @grant           GM_addStyle
@@ -73,14 +74,19 @@ const css = `
 let pageNumber = 1;
 let prevScrollY = 0;
 let nextPageLoading = false;
+let idx = 0;
 
 function requestNextPage() {
     let idname = !!document.getElementById("ofr"); //check if there are no more results to load and stops the infinite scrolling.
-    let classname = !!document.querySelector("#topstuff .mnr-c");
-    if (idname == true || classname == true){
-        console.log(classname);
+    let cn1 = document.getElementsByClassName("v7W49e")[idx];
+    if (idname == true){
         return;
-    }
+    };
+    if (cn1.lastChild == null){
+        window.removeEventListener("scroll", onScrollDocumentEnd);
+        cn1.closest(".next-col").parentNode.removeChild(cn1.closest(".next-col"));
+        return;
+    };
     nextPageLoading = true;
     let nextPage = new URL(location.href);
     if (!nextPage.searchParams.has("q")) return;
@@ -118,6 +124,7 @@ function requestNextPage() {
             }
 
             pageNumber++;
+            idx++;
             nextPageLoading = false;
             msg.classList.contains("shown") && msg.classList.remove("shown");
         });
@@ -166,6 +173,10 @@ function init() {
         #swml { border-left: none !important; }
         .Q8LRLc {display: inline-block; padding: 13px !important; }
     `)
+    let cn2 = !!document.querySelector("#topstuff .mnr-c"); //When 0 results.
+    if (cn2 == true){
+        return;
+    }
     prevScrollY = window.scrollY;
     window.addEventListener("scroll", onScrollDocumentEnd);
     filter(document, filtersAll);
