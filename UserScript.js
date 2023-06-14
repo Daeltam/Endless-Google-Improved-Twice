@@ -8,10 +8,8 @@
 // @icon            https://github.com/tumpio/gmscripts/raw/master/Endless_Google/large.png
 // @match           *://www.google.com/*
 // @match           *://encrypted.google.com/*
-// @run-at          document-end
-// @version         0.0.9-MasterScavenger
-// @updateURL       https://raw.githubusercontent.com/MasterScavenger/Endless-Google-Improved/main/UserScript.js
-// @downloadURL     https://raw.githubusercontent.com/MasterScavenger/Endless-Google-Improved/main/UserScript.js
+// @run-at          document-start
+// @version         0.0.7-LoonerNinja
 // @license         MIT
 // @require         https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @grant           GM_addStyle
@@ -19,7 +17,7 @@
 // ==/UserScript==
 
 
-// This is MasterScavenger's tiny fork of tumpio's original which:
+// This is LoonerNinja's tiny fork of tumpio's original which:
 // 1. Removes the page navigation buttons at the bottom.
 // 2. Removes the repeating "Related searches" when the next page loads.
 // 3. Move the location bar from bottom to the topbar.
@@ -166,9 +164,9 @@ function filter(node, filters) {
 }
 
 function init() {
-    $(".fbar.b2hzT").appendTo("#pTwnEc"); // move the location bar to the top to be seen easily.
+    $(".fbar.b2hzT").appendTo("#slim_appbar"); // move the location bar to the top to be seen easily.
     GM_addStyle(`
-        .fbar.b2hzT {display: inline-block; border-bottom: none; padding: 16px 15px 0px 0px; float: right !important; }
+        .fbar.b2hzT {display: inline-block; border-bottom: none; padding: 0px 15px; float: right !important; }
         .b0KoTc {margin-left: 0 !important; }
         #swml { border-left: none !important; }
         .Q8LRLc {display: inline-block; padding: 13px !important; }
@@ -193,5 +191,4 @@ function init() {
 document.addEventListener("DOMContentLoaded", init);
 
 // Hides the bottom page navigation bar.
-GM_addStyle("#xjs { display: none !important; }");
-
+GM_addStyle(".AaVjTc { display: none !important; }");
