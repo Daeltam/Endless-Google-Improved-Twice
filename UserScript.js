@@ -164,12 +164,14 @@ function filter(node, filters) {
 }
 
 function init() {
-    $(".fbar.b2hzT").appendTo("#slim_appbar"); // move the location bar to the top to be seen easily.
+    $(".fbar.b2hzT").appendTo(".LHJvCe"); // move the location bar to the top to be seen easily.
     GM_addStyle(`
         .fbar.b2hzT {display: inline-block; border-bottom: none; padding: 0px 15px; float: right !important; }
         .b0KoTc {margin-left: 0 !important; }
         #swml { border-left: none !important; }
-        .Q8LRLc {display: inline-block; padding: 13px !important; }
+        .Q8LRLc {display: inline-block !important; }
+        #appbar {padding-bottom: 5px !important; }
+        .LHJvCe {position: inherit !important;}
     `)
     let cn2 = !!document.querySelector("#topstuff .mnr-c"); //When 0 results.
     if (cn2 == true){
