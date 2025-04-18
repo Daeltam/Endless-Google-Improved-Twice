@@ -26,6 +26,7 @@
 // This is Daeltam's Mix fork of tumpio's code and LoonerNinja
 // I kept LoonerNinja's modifications except the function requestNextPage() that is the 0.0.8 version coming from tumpio
 // LoonerNinja's version is not working anymore
+// And I added a line to hide "Related Searches" that were still appearing, reverting OnScrollDocumentEnd() to 0.0.8
 
 // NOTE: Don't run on image search
 if (location.href.indexOf("tbm=isch") !== -1){
@@ -156,23 +157,10 @@ function unescapeHex(hex) {
 function onScrollDocumentEnd() {
     let y = window.scrollY;
     let delta = y - prevScrollY;
-    let elem = document.querySelector('tr[jsname="TeSSVd"]').childNodes.length
-    if (!nextPageLoading && delta > 0 && isDocumentEnd(y) && elem > 0) {
+    if (!nextPageLoading && delta > 0 && isDocumentEnd(y)) {
         requestNextPage();
     }
     prevScrollY = y;
-    let allElems = document.querySelectorAll('*'), // Hides the repeating "Related searches" as the next page loads.
-    elems = [],
-    obj = {};
-    Array.from(allElems).forEach(v => v.getAttribute('class') ? elems.push(v) : null);
-    elems.forEach(v => {!obj[v.getAttribute('class')] ? obj[v.getAttribute('class')] = 1 : obj[v.getAttribute('class')]++});
-    Object.keys(obj).forEach(function(v) {
-        let elements = document.getElementsByClassName('oIk2Cb');
-        if (obj[v] > 1) {
-            Array.from(elements).forEach(v => {v.hidden = true});
-            elements[0].hidden = false;
-        }
-    });
 }
 
 function isDocumentEnd(y) {
@@ -219,3 +207,6 @@ document.addEventListener("DOMContentLoaded", init);
 
 // Hides the bottom page navigation bar.
 GM_addStyle(".AaVjTc { display: none !important; }");
+
+// Hides the "related searches" at the end of the page.
+GM_addStyle(".oIk2Cb { display: none !important;}");
