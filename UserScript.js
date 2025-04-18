@@ -9,7 +9,7 @@
 // @match           *://www.google.com/*
 // @match           *://encrypted.google.com/*
 // @run-at          document-start
-// @version         0.0.7-LoonerNinja
+// @version         0.0.9-Daeltam
 // @license         MIT
 // @require         https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @grant           GM_addStyle
@@ -21,7 +21,11 @@
 // 1. Removes the page navigation buttons at the bottom.
 // 2. Removes the repeating "Related searches" when the next page loads.
 // 3. Move the location bar from bottom to the topbar.
-// 4. Stop the infinite scrolling when there are no more results to load.
+// 4. Stop the infinite scrolling when there are no more results to load. --Broken--
+
+// This is Daeltam's Mix fork of tumpio's code and LoonerNinja
+// I kept LoonerNinja's modifications except the function requestNextPage() that is the 0.0.8 version coming from tumpio
+// LoonerNinja's version is not working anymore
 
 // NOTE: Don't run on image search
 if (location.href.indexOf("tbm=isch") !== -1){
@@ -72,19 +76,8 @@ const css = `
 let pageNumber = 1;
 let prevScrollY = 0;
 let nextPageLoading = false;
-let idx = 0;
 
 function requestNextPage() {
-    let idname = !!document.getElementById("ofr"); //check if there are no more results to load and stops the infinite scrolling.
-    let cn1 = document.getElementsByClassName("v7W49e")[idx];
-    if (idname == true){
-        return;
-    };
-    if (cn1.lastChild == null){
-        window.removeEventListener("scroll", onScrollDocumentEnd);
-        cn1.closest(".next-col").parentNode.removeChild(cn1.closest(".next-col"));
-        return;
-    };
     nextPageLoading = true;
     let nextPage = new URL(location.href);
     if (!nextPage.searchParams.has("q")) return;
@@ -96,7 +89,8 @@ function requestNextPage() {
         .then(text => {
             let parser = new DOMParser();
             let htmlDocument = parser.parseFromString(text, "text/html");
-            let content = htmlDocument.documentElement.querySelector(centerElement);
+            let docElement = htmlDocument.documentElement;
+            let content = docElement.querySelector(centerElement);
 
             content.id = "col_" + pageNumber;
             filter(content, filtersCol);
@@ -110,6 +104,31 @@ function requestNextPage() {
             let col = document.createElement("div");
             col.className = "next-col";
             col.appendChild(pageMarker);
+
+            // Set images source address
+            try {
+                let thumbnails = text.match(/google\.ldi=({.+?})/);
+                let thumbnailsObj = JSON.parse(thumbnails && thumbnails[1]);
+                for (let id in thumbnailsObj) {
+                    docElement.querySelector("#"+id).src = unescapeHex(thumbnailsObj[id]);
+                }
+            } catch(e) {}
+
+            function setImagesSrc({id}) {
+                let pattern = new RegExp("var\\ss='(\\S+)';var\\sii=\\[[a-z0-9_',]*?'"+id+"'[a-z0-9_',]*?\\];");
+                let imageSource = text.match(pattern);
+                if (imageSource != null && imageSource[1]) {
+                    docElement.querySelector("#"+id).src = unescapeHex(imageSource[1]);
+                }
+            }
+            docElement.querySelectorAll('g-img > img[id]').forEach(setImagesSrc);
+            docElement.querySelectorAll('div > img[id^=dimg_]').forEach(setImagesSrc);
+
+            docElement.querySelectorAll('img[data-src]').forEach((img) => {
+                img.src = img.dataset.src;
+                img.style.visibility = 'visible';
+            });
+
             col.appendChild(content);
             document.querySelector(centerElement).appendChild(col);
 
@@ -122,10 +141,16 @@ function requestNextPage() {
             }
 
             pageNumber++;
-            idx++;
             nextPageLoading = false;
             msg.classList.contains("shown") && msg.classList.remove("shown");
         });
+}
+
+function unescapeHex(hex) {
+    if (typeof hex != "string") { return ""; }
+    return hex.replace(/\\x([0-9a-f]{2})/ig, function(_, chunk) {
+        return String.fromCharCode(parseInt(chunk, 16));
+    });
 }
 
 function onScrollDocumentEnd() {
