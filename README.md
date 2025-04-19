@@ -1,10 +1,15 @@
 # Endless-Google-Improved
+Edit from Daeltam :
+Mix fork of tumpio's code and LoonerNinja
+1. I kept LoonerNinja's modifications except the function requestNextPage() that is the 0.0.8 version coming from tumpio; LoonerNinja's version is not working anymore.
+2. I added a line to hide "Related Searches" that were still appearing, reverting OnScrollDocumentEnd() to 0.0.8
+
 This is just my tiny fork of tumpio's original work from https://openuserjs.org/scripts/tumpio/Endless_Google.  
 My aim is just to add some styling and modifaction for better aesthetics. These changes/additions are the following:
 1. Removes the page navigation buttons at the bottom.
 2. Removes the repeating "Related searches" when the next page loads.
 3. Move the location bar from bottom to the topbar.
-4. Stop the infinite scrolling when there are no more results to load.
+4. Stop the infinite scrolling when there are no more results to load. --BROKEN-- 
 
 To use this script, you need to install a userscript manager extension for your browser. Just choose according to your liking below:
 
